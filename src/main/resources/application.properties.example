@@ -6,7 +6,7 @@ spring.mongodb.embedded.data=file:src/main/resources/chamados.json
 spring.security.user.name=${THINDESK_ADMIN_USERNAME:admin}
 spring.security.user.password=${THINDESK_ADMIN_PASSWORD}
 
-spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.prefix=classpath:/templates
 spring.thymeleaf.suffix=.html
 spring.thymeleaf.mode=HTML
 spring.thymeleaf.cache=false
