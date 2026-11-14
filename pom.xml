@@ -4,7 +4,7 @@
 
     <groupId>com.pfc</groupId>
     <artifactId>thindesk</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <packaging>war</packaging>
     <name>thindesk</name>
 
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.36</version>
+            <version>1.18.42</version>
             <scope>provided</scope>
         </dependency>
         <!-- Testes -->
@@ -87,8 +87,27 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-Xlint:deprecation</arg>
+                        <!-- Guarda o nome dos parâmetros; o Spring usa isso em @RequestParam e @PathVariable -->
+                        <arg>-parameters</arg>
                     </compilerArgs>
                     <release>23</release>
+                    <!-- A partir do JDK 23 o Lombok precisa ser declarado aqui para rodar na compilação -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.42</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <!-- Permite que o Mockito funcione no JDK 24/25 -->
+                    <argLine>-Dnet.bytebuddy.experimental=true -XX:+EnableDynamicAgentLoading</argLine>
                 </configuration>
             </plugin>
             <plugin>

@@ -2,7 +2,7 @@
 
 Sistema de chamados técnicos (Spring Boot + MongoDB + Thymeleaf) com um dashboard administrativo alimentado por uma API REST própria.
 
-A documentação completa (requisitos, endpoints, testes e decisões de projeto) está em **[docs/DOCUMENTACAO.md](docs/DOCUMENTACAO.md)**.
+A documentação completa (requisitos, endpoints, testes e decisões de projeto) está em **[docs/DOCUMENTACAO.md](docs/DOCUMENTACAO.md)** e, no formato ABNT, em **[docs/Documentacao_Thindesk_ABNT.pdf](docs/Documentacao_Thindesk_ABNT.pdf)**.
 
 ![Dashboard](docs/evidencias/01-dashboard-geral.png)
 
@@ -16,7 +16,7 @@ A documentação completa (requisitos, endpoints, testes e decisões de projeto)
 
 ## Como rodar
 
-Requisitos: JDK 23 e acesso a um MongoDB (o projeto já aponta para o cluster do Atlas em `application.properties`).
+Requisitos: JDK 23 ou mais novo (funciona no JDK 25) e um MongoDB. Por padrão a aplicação conecta em `mongodb://localhost:27017` (MongoDB Community instalado na máquina). Para usar o Atlas, defina a variável `MONGODB_URI`.
 
 ```bash
 ./mvnw spring-boot:run
@@ -28,13 +28,14 @@ Variáveis de ambiente opcionais:
 
 | Variável | Para quê |
 |---|---|
-| `MONGODB_URI` | Usar outro banco, ex.: `mongodb://localhost:27017` |
+| `MONGODB_URI` | Usar outro banco, ex.: a string de conexão de um cluster do Atlas |
 | `THINDESK_SEED=true` | Inserir ~400 chamados fictícios dos últimos 120 dias (só quando a coleção tem menos de 20 registros) |
 
-Exemplo com banco local e dados de demonstração:
+Exemplo com dados de demonstração (PowerShell):
 
-```bash
-MONGODB_URI=mongodb://localhost:27017 THINDESK_SEED=true ./mvnw spring-boot:run
+```powershell
+$env:THINDESK_SEED="true"
+.\mvnw.cmd spring-boot:run
 ```
 
 ## API
@@ -59,4 +60,4 @@ Todos aceitam `dataInicio`, `dataFim` (AAAA-MM-DD), `status`, `tipo`, `tecnico` 
 
 ## Branches (gitflow)
 
-`main` · `develop` · `feature/api-dashboard` · `feature/dashboard-web` · `feature/documentacao` · `release/1.1.0`
+`main` · `develop` · `feature/api-dashboard` · `feature/dashboard-web` · `feature/documentacao` · `feature/documentacao-abnt` · `release/1.1.0` · `release/1.2.0` · `hotfix/*`

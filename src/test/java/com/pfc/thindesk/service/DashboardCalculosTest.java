@@ -30,10 +30,10 @@ class DashboardCalculosTest {
                 chamado("Concluído", "Rede", "João", AGORA.minusDays(5), AGORA.minusDays(5).plusHours(4)),
                 chamado("Concluído", "Rede", "Mariana", AGORA.minusDays(4), AGORA.minusDays(4).plusHours(8)),
                 chamado("CONCLUIDO", "Impressora", "João", AGORA.minusDays(3), AGORA.minusDays(3).plusHours(6)),
-                chamado("Aberto", "Rede", "João", AGORA.minusDays(3), null),          // fora do prazo (72h)
+                chamado("Aberto", "Rede", "João", AGORA.minusDays(3), null),
                 chamado("EM_ANDAMENTO", "Hardware", "Mariana", AGORA.minusHours(10), null),
                 chamado("Cancelado", "Impressora", null, AGORA.minusDays(1), null),
-                chamado("qualquer coisa", "", "João", null, null));                   // dado sujo
+                chamado("qualquer coisa", "", "João", null, null));
     }
 
     @Test
@@ -48,9 +48,7 @@ class DashboardCalculosTest {
         assertEquals(2, r.pendentes());
         assertEquals(1, r.semStatusDefinido());
         assertEquals(1, r.pendentesForaDoPrazo());
-        // 3 concluídos / (7 - 1 cancelado) = 50%
         assertEquals(50.0, r.taxaResolucao());
-        // (4 + 8 + 6) / 3 = 6h
         assertEquals(6.0, r.tempoMedioResolucaoHoras());
     }
 
@@ -79,7 +77,7 @@ class DashboardCalculosTest {
 
         assertEquals(7, p.pontos().size());
         assertEquals(fim.minusDays(6), p.pontos().get(0).inicio());
-        assertEquals(6, p.totalAbertos());     // o chamado sem data não entra
+        assertEquals(6, p.totalAbertos());
         assertEquals(3, p.totalConcluidos());
         PontoPeriodoDTO dia3 = p.pontos().stream()
                 .filter(x -> x.inicio().equals(fim.minusDays(3))).findFirst().orElseThrow();
@@ -105,7 +103,7 @@ class DashboardCalculosTest {
                 null, null, null, null);
         PeriodoDTO p = DashboardCalculos.periodo(List.of(), filtro, Agrupamento.SEMANA, AGORA);
         assertEquals(1, p.pontos().size());
-        assertEquals(LocalDate.of(2026, 11, 9), p.pontos().get(0).inicio()); // segunda-feira
+        assertEquals(LocalDate.of(2026, 11, 9), p.pontos().get(0).inicio());
     }
 
     @Test
@@ -165,7 +163,7 @@ class DashboardCalculosTest {
 
         PaginaDTO<ChamadoListaDTO> p3 = DashboardCalculos.paginar(base(), 2, 3, AGORA, 48);
         assertEquals(1, p3.itens().size());
-        assertNull(p3.itens().get(0).dataAbertura());          // sem data vai para o fim
+        assertNull(p3.itens().get(0).dataAbertura());
         assertEquals(DashboardCalculos.NAO_INFORMADO, p3.itens().get(0).status());
 
         PaginaDTO<ChamadoListaDTO> alem = DashboardCalculos.paginar(base(), 9, 3, AGORA, 48);

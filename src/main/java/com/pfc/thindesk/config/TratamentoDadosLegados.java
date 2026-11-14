@@ -76,7 +76,6 @@ public class TratamentoDadosLegados implements CommandLineRunner {
                         + "{} data(s) de abertura preenchida(s).", renomeados, statusCorrigidos, datasPreenchidas);
             }
         } catch (Exception e) {
-            // Não impede a aplicação de subir; o dashboard continua normalizando na leitura
             log.warn("Não foi possível tratar os dados legados de chamados: {}", e.getMessage());
         }
     }

@@ -47,7 +47,6 @@ public class ChamadoService {
         chamado.setTecnico(chamadoAtualizado.getTecnico());
         chamado.setUsuario(chamadoAtualizado.getUsuario());
 
-        // Campos novos só são sobrescritos quando enviados, para não apagar dados existentes
         if (chamadoAtualizado.getPrioridade() != null) {
             chamado.setPrioridade(chamadoAtualizado.getPrioridade());
         }

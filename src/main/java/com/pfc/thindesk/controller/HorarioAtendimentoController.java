@@ -31,7 +31,7 @@ public class HorarioAtendimentoController {
     }
 
     @GetMapping("/deletar/{id}")
-    public String deletarHorario(@PathVariable String id) {
+    public String deletarHorario(@PathVariable("id") String id) {
         horarioAtendimentoService.deletar(id);
         return "redirect:/ajustes-horarios";
     }

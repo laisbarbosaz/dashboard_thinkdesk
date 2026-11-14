@@ -40,12 +40,10 @@ public class DadosDemonstracao implements CommandLineRunner {
             {"Manutenção", "Limpeza preventiva do computador", "Troca de fonte", "Computador muito lento"},
             {"E-mail", "Não recebe e-mails externos", "Caixa de e-mail cheia", "Configurar e-mail no celular"},
     };
-    // Peso de cada tipo (Rede e Acesso aparecem mais, como num suporte real)
     private static final int[] PESO_TIPO = {22, 14, 20, 12, 10, 12, 10};
     private static final String[] TECNICOS = {"João", "Mariana", "Carlos", "Fernanda", "Rafael"};
     private static final String[] USUARIOS = {"Alberto", "Beatriz", "Camila", "Diego", "Eduarda", "Felipe",
             "Gabriela", "Henrique", "Isabela", "Lucas", "Marcos", "Natália", "Otávio", "Paula"};
-    // Considerações técnicas na mesma ordem de TIPOS
     private static final String[][] CONSIDERACOES = {
             {"Cabo de rede substituído.", "Roteador do setor reiniciado e canal do Wi-Fi alterado."},
             {"Driver reinstalado e teste de impressão realizado.", "Rolete de tração limpo."},
@@ -100,7 +98,6 @@ public class DadosDemonstracao implements CommandLineRunner {
             c.setPrioridade(prioridade);
             c.setDataAbertura(abertura);
 
-            // Quanto mais antigo, maior a chance de já estar concluído
             long idadeDias = java.time.Duration.between(abertura, agora).toDays();
             double chanceConcluido = idadeDias > 14 ? 0.96 : idadeDias > 3 ? 0.75 : 0.3;
             double sorteio = r.nextDouble();

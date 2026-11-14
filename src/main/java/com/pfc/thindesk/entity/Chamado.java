@@ -19,14 +19,13 @@ public class Chamado {
     private String tecnico;
     private String usuario;
 
-    // Campos adicionados para o dashboard administrativo
-    private String prioridade;            // Baixa, Média, Alta
-    private String consideracoesTecnicas; // anotações do técnico sobre o atendimento
+    private String prioridade;
+    private String consideracoesTecnicas;
     @Indexed
     private LocalDateTime dataAbertura;
     private LocalDateTime dataAtualizacao;
     @Indexed
-    private LocalDateTime dataFechamento; // preenchida quando o chamado é concluído
+    private LocalDateTime dataFechamento;
 
     public String getId() {
         return id;

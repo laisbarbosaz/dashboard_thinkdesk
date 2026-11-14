@@ -36,7 +36,7 @@ public class HomeController {
     public ModelAndView home() {
         ModelAndView modelAndView = new ModelAndView("layout");
         String fragment = "home :: content";
-        log.info("Carregando fragmento: {}", fragment); // Log para depuração
+        log.info("Carregando fragmento: {}", fragment);
         modelAndView.addObject("content", fragment);
         return modelAndView;
     }
@@ -49,9 +49,9 @@ public class HomeController {
     @GetMapping("/chamados")
     public String chamados(Model model) {
         List<Chamado> chamados = chamadoService.listarChamados();
-        model.addAttribute("chamados", chamados); // Passa a lista para o modelo
+        model.addAttribute("chamados", chamados);
         String fragment = "chamados :: content";
-        log.info("Carregando fragmento: {}", fragment); // Log para depuração
+        log.info("Carregando fragmento: {}", fragment);
         model.addAttribute("content", fragment);
         return "chamados";
     }
@@ -61,17 +61,17 @@ public class HomeController {
         List<Cliente> clientes = clienteService.listarClientes();
         model.addAttribute("clientes", clientes);
         String fragment = "clientes :: content";
-        log.info("Carregando fragmento: {}", fragment); // Log para depuração
+        log.info("Carregando fragmento: {}", fragment);
         model.addAttribute("content", fragment);
         return "clientes";
     }
-    
+
     @GetMapping("/ajustes-horarios")
     public String horarios(Model model) {
         List<HorarioAtendimento> horarios = horarioAtendimentoService.listarTodos();
         model.addAttribute("ajustes-horarios", horarios);
         String fragment = "ajustes-horarios :: content";
-        log.info("Carregando fragmento: {}", fragment); // Log para depuração
+        log.info("Carregando fragmento: {}", fragment);
         model.addAttribute("content", fragment);
         return "ajustes-horarios";
     }

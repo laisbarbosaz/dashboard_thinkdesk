@@ -33,7 +33,6 @@ class DashboardApiControllerTest {
     @MockitoBean
     private DashboardService dashboardService;
 
-    // MongoInitConfig e TratamentoDadosLegados dependem do MongoTemplate
     @MockitoBean
     private MongoTemplate mongoTemplate;
 

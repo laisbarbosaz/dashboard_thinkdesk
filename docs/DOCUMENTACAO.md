@@ -1,32 +1,15 @@
-# Dashboard Administrativo — Thindesk
-
-Documentação da atividade: requisitos, API do dashboard, testes e decisões de projeto.
-
-**Sumário**
-
-1. [Contexto](#1-contexto)
-2. [Requisitos funcionais](#2-requisitos-funcionais)
-3. [Requisitos não funcionais](#3-requisitos-não-funcionais)
-4. [Modelagem de dados](#4-modelagem-de-dados)
-5. [Arquitetura](#5-arquitetura)
-6. [Documentação dos endpoints](#6-documentação-dos-endpoints)
-7. [Testes e evidências](#7-testes-e-evidências)
-8. [Decisões de projeto](#8-decisões-de-projeto)
-9. [Gitflow](#9-gitflow)
-10. [Roteiro do vídeo (até 3 min)](#10-roteiro-do-vídeo-até-3-min)
-
----
+# Dashboard — Thindesk Documentação
 
 ## 1. Contexto
 
 O Thindesk é um sistema de chamados técnicos feito em Spring Boot com MongoDB e telas em Thymeleaf. Até aqui ele permitia cadastrar e listar chamados, clientes e horários de atendimento, mas não oferecia nenhuma visão consolidada da operação.
 
-O dashboard administrativo resolve isso: o responsável pelos chamados abre uma única tela e vê quantos chamados existem em cada situação, como a demanda e as entregas evoluíram no tempo, quais tipos de problema mais aparecem, como cada técnico está e quais chamados estão parados há tempo demais. Todos os números vêm de uma API REST criada para essa finalidade (`/api/dashboard`).
+O dashboard faz com que responsável pelos chamados abre uma única tela e vê quantos chamados existem em cada situação, como a demanda e as entregas evoluíram no tempo, quais tipos de problema mais aparecem, como cada técnico está e quais chamados estão parados há tempo demais. Todos os números vêm de uma API REST criada para essa finalidade (`/api/dashboard`).
 
 ## 2. Requisitos funcionais
 
-| Código | Requisito | Como foi atendido |
-|---|---|---|
+| Código | Requisito | Aplicação no sistema |
+
 | RF01 | Indicadores gerais de chamados técnicos | Endpoint `GET /api/dashboard/resumo` e linha de indicadores no topo da tela: total, abertos, em andamento, concluídos, cancelados, taxa de resolução, tempo médio de resolução e pendentes fora do prazo. |
 | RF02 | Análise de chamados atendidos por período (gráficos) | Endpoint `GET /api/dashboard/periodo` e gráfico de linhas com chamados abertos x concluídos, agrupados por dia, semana ou mês. Ao passar o mouse aparece o valor de cada ponto, e há a opção "ver tabela". |
 | RF03 | Situação dos chamados | Endpoint `GET /api/dashboard/status` e gráfico de barras com quantidade e percentual por situação (Aberto, Em andamento, Concluído, Cancelado e, se houver, Não informado). |
@@ -35,11 +18,6 @@ O dashboard administrativo resolve isso: o responsável pelos chamados abre uma 
 | RF06 | Integração com a API | A tela não recebe dados do servidor ao ser renderizada; tudo é buscado por `fetch` nos endpoints REST, que consultam o MongoDB. |
 | RF07 | Atualização e tratamento de dados | Atualização automática a cada 1 minuto (pode ser desligada) e botão "Atualizar agora", com o horário da última atualização. No back-end, os dados antigos são normalizados ao subir a aplicação (status em formatos diferentes, campo `Tipo` com letra maiúscula, chamados sem data), e o cálculo trata valores vazios como "Não informado" e ignora datas inconsistentes. |
 
-Recursos adicionais que surgiram na análise:
-
-- **Atendimento por técnico** (`GET /api/dashboard/tecnicos`): chamados atribuídos, concluídos, pendentes e tempo médio de cada técnico.
-- **Lista de chamados com considerações técnicas** (`GET /api/dashboard/chamados`): tabela paginada com a anotação do técnico, o tempo em aberto e a marcação de "atrasado".
-- No cadastro/atualização de chamados (`/api/chamados`), a data de abertura passou a ser registrada automaticamente e a data de fechamento é preenchida quando o status muda para Concluído (e apagada se o chamado for reaberto).
 
 ## 3. Requisitos não funcionais
 
@@ -458,13 +436,9 @@ Rodar com:
 | `StatusChamadoTest` | Normalização das variações de status existentes no banco. | 3 |
 | `DashboardApiControllerTest` | 401 sem login, resposta do resumo e do ranking, 400 para data/agrupamento/limite inválidos, 503 com banco fora do ar. | 8 |
 
-Os 22 testes de regra de negócio (`DashboardCalculosTest`, `FiltroDashboardTest` e `StatusChamadoTest`) foram executados durante o desenvolvimento e passaram:
+Os 30 testes foram executados com `./mvnw test` (Java 25, MongoDB 8.0) e todos passaram:
 
-```
-Total: 22 | OK: 22 | Falhas: 0
-```
-
-> Inclua aqui o print da saída do `./mvnw test` na sua máquina (todos os 30 testes, incluindo os do controller).
+![Execução dos testes](evidencias/05-testes-maven.png)
 
 ### 7.2 Testes manuais da API
 
@@ -486,63 +460,8 @@ A coleção `docs/thindesk-dashboard.postman_collection.json` tem uma requisiç�
 
 ### 7.3 Telas
 
-Prints gerados com os dados de demonstração (`THINDESK_SEED=true`).
+Para gerar infos, foram usado dados de demonstração (`THINDESK_SEED=true`).
 
-**Visão geral, últimos 30 dias, com o tooltip do gráfico aberto**
 
-![Dashboard geral](evidencias/01-dashboard-geral.png)
-
-**Filtro por técnico, agrupado por semana**
-
-![Filtro por técnico](evidencias/02-filtro-tecnico-semana.png)
-
-**Mensagem de erro vinda da API (data inicial depois da final)**
-
-![Erro de filtro](evidencias/03-erro-de-filtro.png)
-
-**Tela em celular**
-
-![Celular](evidencias/04-tela-celular.png)
-
-## 8. Decisões de projeto
-
-**Endpoints separados por assunto em vez de um único endpoint "dashboard".** Cada bloco da tela tem seu endpoint, o que deixa a API reutilizável (um relatório pode usar só `/tipos`, por exemplo) e permite mudar o agrupamento do gráfico sem recalcular o resto. O custo é fazer seis requisições ao carregar a tela, mas elas são feitas em paralelo.
-
-**Os mesmos filtros em todos os endpoints.** Simplifica o front-end (uma única função monta a query string) e garante que todos os números da tela se referem ao mesmo recorte.
-
-**Filtrar no MongoDB e calcular em Java.** A consulta com `Criteria` já devolve só os chamados do recorte, usando índices. Os agrupamentos são feitos na classe `DashboardCalculos`, sem depender do banco, o que permite testar as regras com listas em memória. Para o volume de um setor de suporte isso é suficiente; se a base crescer muito, os mesmos cálculos podem migrar para pipelines de agregação do MongoDB sem mudar o contrato da API.
-
-**Normalizar dados antigos em vez de exigir dados limpos.** O banco tinha status como "Aberto" e "ABERTO", o campo `Tipo` com T maiúsculo e nenhum chamado com data. Ao iniciar, a aplicação corrige esses registros (a data de abertura é tirada do próprio `ObjectId`, que guarda o momento da criação). O cálculo também normaliza na leitura, por segurança.
-
-**Taxa de resolução sem os cancelados.** Um chamado cancelado não chegou a ser atendido; contá-lo deixaria a taxa artificialmente baixa.
-
-**Chamado conta no dia em que foi aberto e no dia em que foi fechado.** Assim o gráfico mostra a demanda (entradas) e a capacidade de atendimento (saídas) de cada período, que é o que interessa para saber se a fila está crescendo.
-
-**Gráficos em SVG próprio, sem biblioteca.** Os gráficos necessários são simples (linhas e barras). Desenhar em SVG evitou mais uma dependência externa e deu controle sobre o tooltip, a tabela alternativa e o visual, que segue o restante do sistema.
-
-**401 em JSON para a API.** Com o login por formulário, uma chamada `fetch` sem sessão receberia o HTML da tela de login com status 200, e o front-end quebraria ao tentar ler JSON. Com o 401 explícito, a tela mostra "sua sessão expirou".
-
-**Dados de demonstração desligados por padrão.** O seed só roda com `THINDESK_SEED=true` e quando a coleção tem menos de 20 registros, para não misturar dados fictícios com uma base real.
-
-## 9. Gitflow
-
-| Branch | Conteúdo |
-|---|---|
-| `main` | Versão estável. Recebe o merge da release e a tag `v1.1.0`. |
-| `develop` | Integração das features. |
-| `feature/api-dashboard` | Modelo de dados, endpoints, tratamento de erros, segurança da API e testes. |
-| `feature/dashboard-web` | Tela do dashboard (template, JavaScript e CSS) e ajustes do seed. |
-| `feature/documentacao` | Esta documentação, README e coleção do Postman. |
-| `release/1.1.0` | Preparação da versão (número no `pom.xml`). |
-
-Fluxo seguido: `feature/*` → `develop` (merge `--no-ff`) → `release/1.1.0` → `main` + tag, e a release volta para `develop`.
-
-## 10. Roteiro do vídeo (até 3 min)
-
-| Tempo | O que mostrar |
-|---|---|
-| 0:00–0:20 | Problema: o Thindesk só listava chamados, sem visão da operação. Objetivo do dashboard. |
-| 0:20–0:50 | Arquitetura (diagrama da seção 5) e branches no GitHub. |
-| 0:50–1:50 | Tela: indicadores, gráfico com tooltip e troca de agrupamento, situação, ranking de tipos, técnicos e lista com considerações técnicas. Aplicar um filtro e mostrar que tudo muda junto. Mostrar a URL com os filtros. |
-| 1:50–2:30 | API no Postman: `/resumo`, `/periodo`, um erro 400 e o 401 sem login. |
-| 2:30–3:00 | Decisões principais (filtro no banco + cálculo testável, normalização dos dados antigos, taxa sem cancelados) e o `./mvnw test` passando. |
+## 8.Vídeo
+Está no arquivo em .mp4 na pasta de docs

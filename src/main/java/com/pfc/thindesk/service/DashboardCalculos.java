@@ -33,8 +33,6 @@ public final class DashboardCalculos {
     private DashboardCalculos() {
     }
 
-    // ---------------------------------------------------------------- RF01
-
     public static ResumoDTO resumo(List<Chamado> chamados, LocalDateTime agora, int prazoHoras) {
         Map<StatusChamado, Long> porStatus = contarPorStatus(chamados);
         long abertos = porStatus.getOrDefault(StatusChamado.ABERTO, 0L);
@@ -47,7 +45,6 @@ public final class DashboardCalculos {
                 .filter(c -> foraDoPrazo(c, agora, prazoHoras))
                 .count();
 
-        // Taxa de resolução desconsidera os cancelados (não houve atendimento a resolver)
         long baseResolucao = chamados.size() - cancelados;
         Double taxa = baseResolucao > 0 ? arredondar(100.0 * concluidos / baseResolucao) : null;
 
@@ -56,8 +53,6 @@ public final class DashboardCalculos {
                 abertos + emAndamento, foraDoPrazo, prazoHoras,
                 taxa, tempoMedioResolucao(chamados), semStatus, agora);
     }
-
-    // ---------------------------------------------------------------- RF02
 
     /**
      * Série com a quantidade de chamados abertos e concluídos em cada intervalo.
@@ -69,7 +64,6 @@ public final class DashboardCalculos {
         LocalDate inicio = filtro.dataInicio();
         LocalDate fim = filtro.dataFim();
 
-        // Sem período informado: usa as datas encontradas nos próprios dados
         if (inicio == null || fim == null) {
             List<LocalDate> datas = new ArrayList<>();
             for (Chamado c : chamados) {
@@ -83,7 +77,6 @@ public final class DashboardCalculos {
             if (fim == null) fim = Collections.max(datas);
         }
 
-        // Cria todos os intervalos, inclusive os vazios, para o gráfico não "pular" datas
         LinkedHashMap<LocalDate, long[]> intervalos = new LinkedHashMap<>();
         LocalDate cursor = inicioDoIntervalo(inicio, agrupamento);
         while (!cursor.isAfter(fim)) {
@@ -123,8 +116,6 @@ public final class DashboardCalculos {
         return new PeriodoDTO(agrupamento.name().toLowerCase(), totalAbertos, totalConcluidos, pontos, agora);
     }
 
-    // ---------------------------------------------------------------- RF03
-
     public static DistribuicaoDTO situacao(List<Chamado> chamados, LocalDateTime agora) {
         Map<StatusChamado, Long> porStatus = contarPorStatus(chamados);
         long total = chamados.size();
@@ -139,8 +130,6 @@ public final class DashboardCalculos {
         }
         return new DistribuicaoDTO(total, itens, agora);
     }
-
-    // ---------------------------------------------------------------- RF04
 
     public static List<TipoRankingDTO> rankingTipos(List<Chamado> chamados, int limite) {
         Map<String, List<Chamado>> porTipo = agrupar(chamados, Chamado::getTipo);
@@ -182,12 +171,9 @@ public final class DashboardCalculos {
                 .toList();
     }
 
-    // ---------------------------------------------------------------- lista
-
     public static PaginaDTO<ChamadoListaDTO> paginar(List<Chamado> chamados, int pagina, int tamanho,
                                                      LocalDateTime agora, int prazoHoras) {
         List<Chamado> ordenados = new ArrayList<>(chamados);
-        // Mais recentes primeiro; chamados sem data vão para o fim
         ordenados.sort(Comparator.comparing(Chamado::getDataAbertura,
                 Comparator.nullsLast(Comparator.reverseOrder())));
 
@@ -204,7 +190,6 @@ public final class DashboardCalculos {
     public static ChamadoListaDTO paraLista(Chamado c, LocalDateTime agora, int prazoHoras) {
         StatusChamado s = c.statusNormalizado();
         Double horas = null;
-        // Cancelado sem data de fechamento: não faz sentido contar o tempo até hoje
         boolean semFim = s == StatusChamado.CANCELADO && c.getDataFechamento() == null;
         if (c.getDataAbertura() != null && !semFim) {
             LocalDateTime fim = c.getDataFechamento() != null ? c.getDataFechamento() : agora;
@@ -226,8 +211,6 @@ public final class DashboardCalculos {
                 distintos(chamados, Chamado::getPrioridade));
     }
 
-    // ---------------------------------------------------------------- auxiliares
-
     /** Pendente há mais tempo que o prazo configurado. */
     static boolean foraDoPrazo(Chamado c, LocalDateTime agora, int prazoHoras) {
         StatusChamado s = c.statusNormalizado();
@@ -239,7 +222,7 @@ public final class DashboardCalculos {
         OptionalDouble media = chamados.stream()
                 .filter(c -> c.statusNormalizado() == StatusChamado.CONCLUIDO)
                 .filter(c -> c.getDataAbertura() != null && c.getDataFechamento() != null)
-                .filter(c -> !c.getDataFechamento().isBefore(c.getDataAbertura())) // ignora datas inconsistentes
+                .filter(c -> !c.getDataFechamento().isBefore(c.getDataAbertura()))
                 .mapToDouble(c -> Duration.between(c.getDataAbertura(), c.getDataFechamento()).toMinutes() / 60.0)
                 .average();
         return media.isPresent() ? arredondar(media.getAsDouble()) : null;

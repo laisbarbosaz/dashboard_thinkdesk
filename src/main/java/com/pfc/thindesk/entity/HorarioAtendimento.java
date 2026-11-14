@@ -15,7 +15,7 @@ public class HorarioAtendimento {
     @Id
     private String id;
     private String setor;
-    private String diaSemana; // Exemplo: "Segunda-feira"
-    private String horarioInicio; // Exemplo: "08:00"
-    private String horarioFim; // Exemplo: "18:00"
+    private String diaSemana;
+    private String horarioInicio;
+    private String horarioFim;
 }
