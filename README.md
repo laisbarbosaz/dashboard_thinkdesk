@@ -4,7 +4,6 @@ Sistema de chamados técnicos (Spring Boot + MongoDB + Thymeleaf) com um dashboa
 
 A documentação completa está em docs
 
-![Dashboard](docs/evidencias/01-dashboard-geral.png)
 
 ## O que tem no dash
 
