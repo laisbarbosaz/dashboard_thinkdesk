@@ -41,6 +41,11 @@ public class HomeController {
         return modelAndView;
     }
 
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "dashboard";
+    }
+
     @GetMapping("/chamados")
     public String chamados(Model model) {
         List<Chamado> chamados = chamadoService.listarChamados();

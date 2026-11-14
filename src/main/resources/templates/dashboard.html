@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard - Thindesk</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+        <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    </head>
+    <body>
+        <aside>
+            <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+        </aside>
+
+        <div class="toggle-btn btn btn-dark d-md-none">
+            <span>&#9776;</span>
+        </div>
+
+        <div id="dashboard" class="container-fluid px-4 py-4" th:fragment="content">
+
+            <div class="d-flex flex-wrap align-items-baseline justify-content-between mb-3">
+                <h2 class="mb-0">Dashboard</h2>
+                <div class="text-muted small">
+                    <span id="atualizadoEm">Carregando...</span>
+                    <label class="ms-3"><input type="checkbox" id="autoAtualizar" checked> atualizar a cada 1 min</label>
+                    <button type="button" id="btnAtualizar" class="btn btn-outline-secondary btn-sm ms-2">Atualizar agora</button>
+                </div>
+            </div>
+
+            <!-- RF05: filtros -->
+            <form id="filtros" class="row g-2 align-items-end border-bottom pb-3 mb-3">
+                <div class="col-6 col-md-2">
+                    <label for="dataInicio" class="form-label small mb-0">De</label>
+                    <input type="date" id="dataInicio" name="dataInicio" class="form-control form-control-sm">
+                </div>
+                <div class="col-6 col-md-2">
+                    <label for="dataFim" class="form-label small mb-0">Até</label>
+                    <input type="date" id="dataFim" name="dataFim" class="form-control form-control-sm">
+                </div>
+                <div class="col-6 col-md-2">
+                    <label for="status" class="form-label small mb-0">Status</label>
+                    <select id="status" name="status" class="form-select form-select-sm">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <label for="tipo" class="form-label small mb-0">Tipo</label>
+                    <select id="tipo" name="tipo" class="form-select form-select-sm">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <label for="tecnico" class="form-label small mb-0">Técnico</label>
+                    <select id="tecnico" name="tecnico" class="form-select form-select-sm">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+                    <button type="button" id="btnLimpar" class="btn btn-link btn-sm">Limpar</button>
+                </div>
+            </form>
+
+            <div id="mensagem" class="alert alert-danger d-none" role="alert"></div>
+
+            <!-- RF01: indicadores gerais -->
+            <div class="row g-2 mb-4" id="indicadores">
+                <div class="col-6 col-md-3 col-xl"><div class="indicador"><span>Total</span><strong id="ind-total">-</strong></div></div>
+                <div class="col-6 col-md-3 col-xl"><div class="indicador"><span>Abertos</span><strong id="ind-abertos">-</strong></div></div>
+                <div class="col-6 col-md-3 col-xl"><div class="indicador"><span>Em andamento</span><strong id="ind-andamento">-</strong></div></div>
+                <div class="col-6 col-md-3 col-xl"><div class="indicador"><span>Concluídos</span><strong id="ind-concluidos">-</strong></div></div>
+                <div class="col-6 col-md-3 col-xl"><div class="indicador"><span>Cancelados</span><strong id="ind-cancelados">-</strong></div></div>
+                <div class="col-6 col-md-3 col-xl"><div class="indicador"><span>Taxa de resolução</span><strong id="ind-taxa">-</strong></div></div>
+                <div class="col-6 col-md-3 col-xl"><div class="indicador"><span>Tempo médio de resolução</span><strong id="ind-tempo">-</strong></div></div>
+                <div class="col-6 col-md-3 col-xl"><div class="indicador"><span id="ind-prazo-rotulo">Pendentes fora do prazo</span><strong id="ind-prazo">-</strong></div></div>
+            </div>
+
+            <!-- RF02: chamados por período -->
+            <section class="mb-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-baseline">
+                    <h5 class="mb-1">Chamados abertos e concluídos</h5>
+                    <div class="small">
+                        <label for="agrupamento" class="me-1">Agrupar por</label>
+                        <select id="agrupamento" class="form-select form-select-sm d-inline-block w-auto">
+                            <option value="dia">dia</option>
+                            <option value="semana">semana</option>
+                            <option value="mes">mês</option>
+                        </select>
+                        <a href="#" id="alternarTabelaPeriodo" class="ms-2">ver tabela</a>
+                    </div>
+                </div>
+                <p class="text-muted small mb-2" id="periodo-total"></p>
+                <div id="grafico-periodo" class="grafico"></div>
+                <div id="tabela-periodo" class="d-none"></div>
+            </section>
+
+            <div class="row g-4 mb-4">
+                <!-- RF03: situação -->
+                <section class="col-lg-5">
+                    <h5 class="mb-2">Situação dos chamados</h5>
+                    <div id="grafico-status"></div>
+                </section>
+
+                <!-- RF04: tipos mais atendidos -->
+                <section class="col-lg-7">
+                    <h5 class="mb-2">Tipos de chamado mais atendidos</h5>
+                    <table class="table table-sm align-middle mb-0">
+                        <thead>
+                            <tr><th>#</th><th>Tipo</th><th class="text-end">Chamados</th><th class="text-end">Concluídos</th><th style="width:35%"></th></tr>
+                        </thead>
+                        <tbody id="tabela-tipos"></tbody>
+                    </table>
+                </section>
+            </div>
+
+            <section class="mb-4">
+                <h5 class="mb-2">Atendimento por técnico</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped mb-0">
+                        <thead>
+                            <tr><th>Técnico</th><th class="text-end">Atribuídos</th><th class="text-end">Concluídos</th><th class="text-end">Pendentes</th><th class="text-end">Tempo médio</th></tr>
+                        </thead>
+                        <tbody id="tabela-tecnicos"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="mb-4">
+                <h5 class="mb-2">Chamados</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped mb-2">
+                        <thead>
+                            <tr><th>Abertura</th><th>Descrição</th><th>Tipo</th><th>Status</th><th>Técnico</th><th>Prioridade</th><th>Considerações técnicas</th><th class="text-end">Tempo</th></tr>
+                        </thead>
+                        <tbody id="tabela-chamados"></tbody>
+                    </table>
+                </div>
+                <div class="d-flex align-items-center gap-2 small">
+                    <button type="button" id="paginaAnterior" class="btn btn-outline-secondary btn-sm">Anterior</button>
+                    <span id="paginaInfo"></span>
+                    <button type="button" id="paginaProxima" class="btn btn-outline-secondary btn-sm">Próxima</button>
+                </div>
+            </section>
+
+            <div id="tooltip" class="grafico-tooltip d-none"></div>
+        </div>
+
+        <script th:src="@{/js/script.js}"></script>
+        <script th:src="@{/js/dashboard.js}"></script>
+    </body>
+</html>

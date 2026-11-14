@@ -1,0 +1,101 @@
+/* Dashboard administrativo - mantém o visual simples das outras telas */
+#dashboard {
+    flex: 1;
+    min-width: 0;
+    --cor-abertos: #2a78d6;
+    --cor-concluidos: #eb6834;
+    --cor-barra: #2a78d6;
+    --grade: #e3e3e0;
+    --texto-eixo: #6c6b67;
+}
+
+.indicador {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: .6rem .75rem;
+    height: 100%;
+}
+
+.indicador span {
+    display: block;
+    font-size: .8rem;
+    color: #6c757d;
+}
+
+.indicador strong {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.grafico {
+    position: relative;
+    width: 100%;
+}
+
+.grafico svg text {
+    font-size: 11px;
+    fill: var(--texto-eixo);
+}
+
+.grafico-tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: #212529;
+    color: #fff;
+    font-size: .8rem;
+    padding: .35rem .5rem;
+    border-radius: 3px;
+    z-index: 2000;
+    white-space: nowrap;
+}
+
+.legenda {
+    font-size: .8rem;
+    color: #495057;
+}
+
+.legenda i {
+    display: inline-block;
+    width: 14px;
+    height: 3px;
+    vertical-align: middle;
+    margin: 0 4px 0 10px;
+}
+
+.barra-fundo {
+    background: #f1f1ef;
+    height: 10px;
+    border-radius: 0 4px 4px 0;
+}
+
+.barra {
+    background: var(--cor-barra);
+    height: 10px;
+    border-radius: 0 4px 4px 0;
+}
+
+.status-linha {
+    display: grid;
+    grid-template-columns: 110px 1fr 90px;
+    gap: .5rem;
+    align-items: center;
+    font-size: .9rem;
+    margin-bottom: .45rem;
+}
+
+.atrasado {
+    font-size: .75rem;
+    color: #b42318;
+    font-weight: 600;
+}
+
+#tabela-chamados td {
+    font-size: .85rem;
+}
+
+@media (max-width: 768px) {
+    /* espaço para o botão do menu que fica fixo no canto */
+    #dashboard {
+        padding-top: 3.5rem !important;
+    }
+}

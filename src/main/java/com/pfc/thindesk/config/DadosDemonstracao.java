@@ -28,7 +28,7 @@ public class DadosDemonstracao implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(DadosDemonstracao.class);
     private static final int LIMITE_BASE_VAZIA = 20;
-    private static final int QUANTIDADE = 220;
+    private static final int QUANTIDADE = 400;
     private static final int DIAS = 120;
 
     private static final String[][] TIPOS = {
@@ -45,13 +45,15 @@ public class DadosDemonstracao implements CommandLineRunner {
     private static final String[] TECNICOS = {"João", "Mariana", "Carlos", "Fernanda", "Rafael"};
     private static final String[] USUARIOS = {"Alberto", "Beatriz", "Camila", "Diego", "Eduarda", "Felipe",
             "Gabriela", "Henrique", "Isabela", "Lucas", "Marcos", "Natália", "Otávio", "Paula"};
-    private static final String[] CONSIDERACOES = {
-            "Problema resolvido após reinício do equipamento.",
-            "Cabo de rede substituído.",
-            "Driver reinstalado e teste de impressão realizado.",
-            "Usuário orientado sobre o procedimento.",
-            "Peça trocada; equipamento em observação.",
-            "Configuração ajustada conforme padrão do setor.",
+    // Considerações técnicas na mesma ordem de TIPOS
+    private static final String[][] CONSIDERACOES = {
+            {"Cabo de rede substituído.", "Roteador do setor reiniciado e canal do Wi-Fi alterado."},
+            {"Driver reinstalado e teste de impressão realizado.", "Rolete de tração limpo."},
+            {"Senha redefinida; usuário orientado a trocar no primeiro acesso.", "Permissão concedida após aprovação do gestor."},
+            {"Instalação concluída e licença ativada.", "Software atualizado para a versão homologada."},
+            {"Fonte substituída; equipamento em observação.", "Periférico trocado por um do estoque."},
+            {"Limpeza interna e troca de pasta térmica.", "Arquivos temporários removidos e disco verificado."},
+            {"Regra de spam ajustada no servidor.", "Conta configurada e testada com o usuário."},
     };
 
     private final MongoTemplate mongoTemplate;
@@ -75,7 +77,8 @@ public class DadosDemonstracao implements CommandLineRunner {
     static List<Chamado> gerar(Random r, LocalDateTime agora) {
         List<Chamado> lista = new ArrayList<>();
         for (int i = 0; i < QUANTIDADE; i++) {
-            String[] tipo = TIPOS[sortearTipo(r)];
+            int indiceTipo = sortearTipo(r);
+            String[] tipo = TIPOS[indiceTipo];
             LocalDateTime abertura = agora.minusDays(r.nextInt(DIAS))
                     .withHour(8 + r.nextInt(10)).withMinute(r.nextInt(60)).withSecond(0).withNano(0);
             if (abertura.isAfter(agora)) {
@@ -98,7 +101,7 @@ public class DadosDemonstracao implements CommandLineRunner {
 
             // Quanto mais antigo, maior a chance de já estar concluído
             long idadeDias = java.time.Duration.between(abertura, agora).toDays();
-            double chanceConcluido = idadeDias > 14 ? 0.88 : idadeDias > 3 ? 0.6 : 0.25;
+            double chanceConcluido = idadeDias > 14 ? 0.96 : idadeDias > 3 ? 0.75 : 0.3;
             double sorteio = r.nextDouble();
             StatusChamado status;
             if (sorteio < 0.04) {
@@ -120,7 +123,7 @@ public class DadosDemonstracao implements CommandLineRunner {
                 }
                 c.setDataFechamento(fechamento);
                 c.setDataAtualizacao(fechamento);
-                c.setConsideracoesTecnicas(CONSIDERACOES[r.nextInt(CONSIDERACOES.length)]);
+                c.setConsideracoesTecnicas(CONSIDERACOES[indiceTipo][r.nextInt(2)]);
             } else if (status == StatusChamado.EM_ANDAMENTO) {
                 c.setDataAtualizacao(abertura.plusHours(1));
                 c.setConsideracoesTecnicas("Em análise pelo técnico.");
