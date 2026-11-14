@@ -2,8 +2,7 @@
 
 ## 1. Contexto
 
-O Thindesk é um sistema de chamados técnicos feito em Spring Boot com MongoDB e telas em Thymeleaf. Até aqui ele permitia cadastrar e listar chamados, clientes e horários de atendimento, mas não oferecia nenhuma visão consolidada da operação.
-
+O Thindesk é um sistema de chamados técnicos feito em Spring Boot com MongoDB e telas em Thymeleaf. 
 O dashboard faz com que responsável pelos chamados abre uma única tela e vê quantos chamados existem em cada situação, como a demanda e as entregas evoluíram no tempo, quais tipos de problema mais aparecem, como cada técnico está e quais chamados estão parados há tempo demais. Todos os números vêm de uma API REST criada para essa finalidade (`/api/dashboard`).
 
 ## 2. Requisitos funcionais
