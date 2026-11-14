@@ -16,24 +16,34 @@ A documentação completa (requisitos, endpoints, testes e decisões de projeto)
 
 ## Como rodar
 
-Requisitos: JDK 23 ou mais novo (funciona no JDK 25) e um MongoDB. Por padrão a aplicação conecta em `mongodb://localhost:27017` (MongoDB Community instalado na máquina). Para usar o Atlas, defina a variável `MONGODB_URI`.
+Requisitos: JDK 23 ou mais novo (funciona no JDK 25) e um MongoDB. Crie o arquivo local de configuração a partir do exemplo:
 
 ```bash
-./mvnw spring-boot:run
+cp src/main/resources/application.properties.example src/main/resources/application.properties
 ```
 
-Acesse http://localhost:8080, entre com `admin` / `thindesk` e clique em **Dashboard** no menu.
+Defina uma senha de administrador antes de iniciar. No PowerShell:
 
-Variáveis de ambiente opcionais:
+```powershell
+$env:THINDESK_ADMIN_PASSWORD = "defina-uma-senha-forte"
+.\mvnw.cmd spring-boot:run
+```
+
+A aplicação conecta por padrão em `mongodb://localhost:27017`. Para usar o Atlas, defina `MONGODB_URI`. Acesse http://localhost:8080, entre com o usuário `admin` (ou o valor de `THINDESK_ADMIN_USERNAME`) e a senha definida em `THINDESK_ADMIN_PASSWORD`, depois clique em **Dashboard** no menu.
+
+Variáveis de ambiente:
 
 | Variável | Para quê |
 |---|---|
-| `MONGODB_URI` | Usar outro banco, ex.: a string de conexão de um cluster do Atlas |
+| `THINDESK_ADMIN_PASSWORD` | Senha obrigatória para autenticação do administrador |
+| `THINDESK_ADMIN_USERNAME` | Usuário administrador (padrão: `admin`) |
+| `MONGODB_URI` | URI de conexão do MongoDB (padrão: `mongodb://localhost:27017`) |
 | `THINDESK_SEED=true` | Inserir ~400 chamados fictícios dos últimos 120 dias (só quando a coleção tem menos de 20 registros) |
 
 Exemplo com dados de demonstração (PowerShell):
 
 ```powershell
+$env:THINDESK_ADMIN_PASSWORD = "defina-uma-senha-forte"
 $env:THINDESK_SEED="true"
 .\mvnw.cmd spring-boot:run
 ```

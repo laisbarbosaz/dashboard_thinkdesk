@@ -29,7 +29,7 @@ O dashboard faz com que responsável pelos chamados abre uma única tela e vê q
 | RNF04 | **Acessibilidade:** a informação nunca depende só da cor: o gráfico tem legenda e rótulo no fim de cada linha, o atraso é indicado por texto ("atrasado") e o gráfico de período pode ser visto como tabela. |
 | RNF05 | **Confiabilidade:** erros seguem um formato JSON único; se o banco estiver indisponível a API responde `503` e a tela mostra o aviso sem travar. |
 | RNF06 | **Manutenibilidade:** as regras de cálculo ficam em uma classe sem dependência de Spring ou MongoDB (`DashboardCalculos`), coberta por testes unitários. |
-| RNF07 | **Configuração:** o prazo usado para "fora do prazo" e a carga de dados de demonstração são configuráveis em `application.properties`, e a conexão com o banco pode ser trocada pela variável de ambiente `MONGODB_URI`. |
+| RNF07 | **Configuração:** o arquivo `application.properties` é local e não deve ser versionado. O exemplo `application.properties.example` define valores não sigilosos; senha, usuário do administrador e URI do banco podem ser configurados por variáveis de ambiente. |
 | RNF08 | **Compatibilidade:** Java 23, Spring Boot 3.4 e MongoDB (Atlas ou local). Navegadores atuais (Chrome, Edge, Firefox). Os gráficos são SVG desenhados pelo próprio JavaScript da página, sem biblioteca externa. |
 
 ## 4. Modelagem de dados
@@ -105,7 +105,7 @@ flowchart LR
 ## 6. Documentação dos endpoints
 
 **URL base:** `http://localhost:8080/api/dashboard`
-**Autenticação:** sessão do navegador (após login) ou Basic Auth (`admin` / `thindesk`, definidos em `application.properties`).
+**Autenticação:** sessão do navegador (após login) ou Basic Auth. O usuário padrão é `admin`; a senha deve ser definida na variável de ambiente `THINDESK_ADMIN_PASSWORD`. O usuário pode ser alterado por `THINDESK_ADMIN_USERNAME`.
 **Formato:** todas as respostas são JSON. Datas seguem ISO 8601 (`2026-11-14` e `2026-11-14T10:16:00`).
 
 ### 6.1 Parâmetros de filtro (comuns a todos os endpoints, exceto `/filtros`)
@@ -149,7 +149,7 @@ Todos são opcionais. Parâmetro ausente, vazio ou com valor `todos` significa "
 Parâmetros: filtros comuns.
 
 ```bash
-curl -u admin:thindesk "http://localhost:8080/api/dashboard/resumo?dataInicio=2026-11-01&dataFim=2026-11-14"
+curl -u "admin:$THINDESK_ADMIN_PASSWORD" "http://localhost:8080/api/dashboard/resumo?dataInicio=2026-11-01&dataFim=2026-11-14"
 ```
 
 Resposta `200`:
@@ -193,7 +193,7 @@ Erros possíveis: 400 (filtros inválidos), 401, 503.
 Sem `dataInicio`/`dataFim`, o intervalo vai da data mais antiga à mais recente encontrada nos dados. Períodos sem chamados aparecem com zero, para o gráfico não pular datas.
 
 ```bash
-curl -u admin:thindesk "http://localhost:8080/api/dashboard/periodo?dataInicio=2026-11-08&dataFim=2026-11-14&agrupamento=dia"
+curl -u "admin:$THINDESK_ADMIN_PASSWORD" "http://localhost:8080/api/dashboard/periodo?dataInicio=2026-11-08&dataFim=2026-11-14&agrupamento=dia"
 ```
 
 Resposta `200` (resumida):
@@ -231,7 +231,7 @@ Além de 401 e 503.
 Parâmetros: filtros comuns.
 
 ```bash
-curl -u admin:thindesk "http://localhost:8080/api/dashboard/status?dataInicio=2026-11-01&dataFim=2026-11-14"
+curl -u "admin:$THINDESK_ADMIN_PASSWORD" "http://localhost:8080/api/dashboard/status?dataInicio=2026-11-01&dataFim=2026-11-14"
 ```
 
 Resposta `200`:
@@ -263,7 +263,7 @@ Erros possíveis: 400, 401, 503.
 | `limite` | `5` | 1 a 50 | Quantidade de posições no ranking |
 
 ```bash
-curl -u admin:thindesk "http://localhost:8080/api/dashboard/tipos?dataInicio=2026-11-01&dataFim=2026-11-14&limite=3"
+curl -u "admin:$THINDESK_ADMIN_PASSWORD" "http://localhost:8080/api/dashboard/tipos?dataInicio=2026-11-01&dataFim=2026-11-14&limite=3"
 ```
 
 Resposta `200`:
@@ -290,7 +290,7 @@ Erros possíveis: 400 (`limite` fora de 1–50 ou não numérico), 401, 503.
 | `limite` | `10` | 1 a 50 |
 
 ```bash
-curl -u admin:thindesk "http://localhost:8080/api/dashboard/tecnicos?dataInicio=2026-11-01&dataFim=2026-11-14&limite=2"
+curl -u "admin:$THINDESK_ADMIN_PASSWORD" "http://localhost:8080/api/dashboard/tecnicos?dataInicio=2026-11-01&dataFim=2026-11-14&limite=2"
 ```
 
 Resposta `200`:
@@ -317,7 +317,7 @@ Erros possíveis: 400, 401, 503.
 | `tamanho` | `10` | 1 a 100 |
 
 ```bash
-curl -u admin:thindesk "http://localhost:8080/api/dashboard/chamados?dataInicio=2026-11-01&dataFim=2026-11-14&pagina=0&tamanho=2"
+curl -u "admin:$THINDESK_ADMIN_PASSWORD" "http://localhost:8080/api/dashboard/chamados?dataInicio=2026-11-01&dataFim=2026-11-14&pagina=0&tamanho=2"
 ```
 
 Resposta `200`:
@@ -372,7 +372,7 @@ Erros possíveis: 400 (`pagina` negativa, `tamanho` fora de 1–100), 401, 503.
 Sem parâmetros.
 
 ```bash
-curl -u admin:thindesk "http://localhost:8080/api/dashboard/filtros"
+curl -u "admin:$THINDESK_ADMIN_PASSWORD" "http://localhost:8080/api/dashboard/filtros"
 ```
 
 Resposta `200`:
@@ -401,7 +401,7 @@ Erros possíveis: 401, 503.
 Exemplo de conclusão de um chamado com consideração técnica:
 
 ```bash
-curl -u admin:thindesk -X PUT "http://localhost:8080/api/chamados/675b1fa1d64af05ea59ee7d3" \
+curl -u "admin:$THINDESK_ADMIN_PASSWORD" -X PUT "http://localhost:8080/api/chamados/675b1fa1d64af05ea59ee7d3" \
   -H "Content-Type: application/json" \
   -d '{"descricao":"Chamado de Teste","status":"CONCLUIDO","tipo":"Manutenção","tecnico":"João","usuario":"Alberto","consideracoesTecnicas":"Equipamento revisado e liberado."}'
 ```
