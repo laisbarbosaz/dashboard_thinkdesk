@@ -25,6 +25,11 @@ public class ChamadoController {
         return chamadoService.listarChamados();
     }
 
+    @GetMapping("/{id}")
+    public Chamado buscarChamado(@PathVariable String id) {
+        return chamadoService.buscarPorId(id);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Chamado> atualizarChamado(@PathVariable String id, @RequestBody Chamado chamadoAtualizado) {
         Chamado chamado = chamadoService.atualizarChamado(id, chamadoAtualizado);
