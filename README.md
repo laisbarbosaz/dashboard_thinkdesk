@@ -1,12 +1,12 @@
-# Thindesk — Dashboard Administrativo
+# Thindesk — Dashboard 
 
 Sistema de chamados técnicos (Spring Boot + MongoDB + Thymeleaf) com um dashboard administrativo alimentado por uma API REST própria.
 
-A documentação completa (requisitos, endpoints, testes e decisões de projeto) está em **[docs/DOCUMENTACAO.md](docs/DOCUMENTACAO.md)** e, no formato ABNT, em **[docs/Documentacao_Thindesk_ABNT.pdf](docs/Documentacao_Thindesk_ABNT.pdf)**.
+A documentação completa está em docs
 
 ![Dashboard](docs/evidencias/01-dashboard-geral.png)
 
-## O que tem no dashboard
+## O que tem no dash
 
 - Indicadores gerais: total, abertos, em andamento, concluídos, cancelados, taxa de resolução, tempo médio e pendentes fora do prazo
 - Gráfico de chamados abertos x concluídos por dia, semana ou mês
@@ -61,13 +61,3 @@ $env:THINDESK_SEED="true"
 | `GET /api/dashboard/filtros` | Opções para os filtros |
 
 Todos aceitam `dataInicio`, `dataFim` (AAAA-MM-DD), `status`, `tipo`, `tecnico` e `prioridade`. Detalhes, exemplos e erros na [documentação](docs/DOCUMENTACAO.md#6-documentação-dos-endpoints). A coleção do Postman está em `docs/thindesk-dashboard.postman_collection.json`.
-
-## Testes
-
-```bash
-./mvnw test
-```
-
-## Branches (gitflow)
-
-`main` · `develop` · `feature/api-dashboard` · `feature/dashboard-web` · `feature/documentacao` · `feature/documentacao-abnt` · `release/1.1.0` · `release/1.2.0` · `hotfix/*`
