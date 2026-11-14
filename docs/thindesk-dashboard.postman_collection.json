@@ -1,0 +1,565 @@
+{
+  "info": {
+    "name": "Thindesk - Dashboard API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "admin",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "thindesk",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Sucesso",
+      "item": [
+        {
+          "name": "Resumo (RF01)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/resumo?dataInicio=2026-11-01&dataFim=2026-11-14",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "resumo"
+              ],
+              "query": [
+                {
+                  "key": "dataInicio",
+                  "value": "2026-11-01"
+                },
+                {
+                  "key": "dataFim",
+                  "value": "2026-11-14"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Período por dia (RF02)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/periodo?dataInicio=2026-11-01&dataFim=2026-11-14&agrupamento=dia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "periodo"
+              ],
+              "query": [
+                {
+                  "key": "dataInicio",
+                  "value": "2026-11-01"
+                },
+                {
+                  "key": "dataFim",
+                  "value": "2026-11-14"
+                },
+                {
+                  "key": "agrupamento",
+                  "value": "dia"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Período por semana (RF02)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/periodo?agrupamento=semana",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "periodo"
+              ],
+              "query": [
+                {
+                  "key": "agrupamento",
+                  "value": "semana"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Situação (RF03)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/status?dataInicio=2026-11-01&dataFim=2026-11-14",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "dataInicio",
+                  "value": "2026-11-01"
+                },
+                {
+                  "key": "dataFim",
+                  "value": "2026-11-14"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tipos mais atendidos (RF04)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/tipos?dataInicio=2026-11-01&dataFim=2026-11-14&limite=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "tipos"
+              ],
+              "query": [
+                {
+                  "key": "dataInicio",
+                  "value": "2026-11-01"
+                },
+                {
+                  "key": "dataFim",
+                  "value": "2026-11-14"
+                },
+                {
+                  "key": "limite",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Técnicos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/tecnicos?dataInicio=2026-11-01&dataFim=2026-11-14",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "tecnicos"
+              ],
+              "query": [
+                {
+                  "key": "dataInicio",
+                  "value": "2026-11-01"
+                },
+                {
+                  "key": "dataFim",
+                  "value": "2026-11-14"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Chamados paginados",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/chamados?dataInicio=2026-11-01&dataFim=2026-11-14&pagina=0&tamanho=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "chamados"
+              ],
+              "query": [
+                {
+                  "key": "dataInicio",
+                  "value": "2026-11-01"
+                },
+                {
+                  "key": "dataFim",
+                  "value": "2026-11-14"
+                },
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanho",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filtro por status e técnico (RF05)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/resumo?status=CONCLUIDO&tecnico=João",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "resumo"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "CONCLUIDO"
+                },
+                {
+                  "key": "tecnico",
+                  "value": "João"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Opções de filtro (RF05)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/filtros",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "filtros"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Erros",
+      "item": [
+        {
+          "name": "401 - sem login",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/resumo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "resumo"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "400 - data em formato errado",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/resumo?dataInicio=14/11/2026",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "resumo"
+              ],
+              "query": [
+                {
+                  "key": "dataInicio",
+                  "value": "14/11/2026"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "400 - início depois do fim",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/resumo?dataInicio=2026-11-20&dataFim=2026-11-01",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "resumo"
+              ],
+              "query": [
+                {
+                  "key": "dataInicio",
+                  "value": "2026-11-20"
+                },
+                {
+                  "key": "dataFim",
+                  "value": "2026-11-01"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "400 - status desconhecido",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/resumo?status=pendurado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "resumo"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pendurado"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "400 - agrupamento inválido",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/periodo?agrupamento=ano",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "periodo"
+              ],
+              "query": [
+                {
+                  "key": "agrupamento",
+                  "value": "ano"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "400 - limite fora da faixa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/tipos?limite=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "tipos"
+              ],
+              "query": [
+                {
+                  "key": "limite",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "400 - tamanho de página fora da faixa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/chamados?tamanho=500",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "chamados"
+              ],
+              "query": [
+                {
+                  "key": "tamanho",
+                  "value": "500"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "404 - chamado inexistente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/chamados/000000000000000000000000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chamados",
+                "000000000000000000000000"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
