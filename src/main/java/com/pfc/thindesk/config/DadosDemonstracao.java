@@ -75,6 +75,7 @@ public class DadosDemonstracao implements CommandLineRunner {
     }
 
     static List<Chamado> gerar(Random r, LocalDateTime agora) {
+        agora = agora.withNano(0);
         List<Chamado> lista = new ArrayList<>();
         for (int i = 0; i < QUANTIDADE; i++) {
             int indiceTipo = sortearTipo(r);
