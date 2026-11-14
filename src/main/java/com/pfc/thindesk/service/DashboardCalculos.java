@@ -204,7 +204,9 @@ public final class DashboardCalculos {
     public static ChamadoListaDTO paraLista(Chamado c, LocalDateTime agora, int prazoHoras) {
         StatusChamado s = c.statusNormalizado();
         Double horas = null;
-        if (c.getDataAbertura() != null) {
+        // Cancelado sem data de fechamento: não faz sentido contar o tempo até hoje
+        boolean semFim = s == StatusChamado.CANCELADO && c.getDataFechamento() == null;
+        if (c.getDataAbertura() != null && !semFim) {
             LocalDateTime fim = c.getDataFechamento() != null ? c.getDataFechamento() : agora;
             horas = horas(c.getDataAbertura(), fim);
         }
